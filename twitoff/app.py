@@ -21,7 +21,7 @@ def create_app():
         name= name or request.values["user_name"]
 
         try:
-            if request.method=="POST":
+            if request.method=="post":
                 add_user_tweepy(name)
                 message="User {} successfully added!", format(name)
             tweets = User.query.filter(User.username==name).one().tweet 
