@@ -8,13 +8,14 @@ from twitoff.bd_model import DB, User, Tweet
 TWITTER_AUTH = tweepy.OAuthHandler(getenv("TWITTER_CONSUMER_API_KEY"), 
                                    getenv("TWITTER_CONSUMER_API_SECRET"))
 TWITTER_AUTH.set_access_token(getenv("TWITTER_ACCESS_TOKEN"),
-                              getenv("TWITTER_ACCESS_TOKEN_SECRET"))
+                              getenv("TWITTER_ACCESS_TOKEN_SECRET"),
+                              getenv("TWITTER_ACCESS_BEARER_TOKEN"))
 TWITTER = tweepy.API(TWITTER_AUTH)
 
 nlp=spacy.load("en_core_web_md", disable=["tagger","parser"])
 
 def vectorize_tweet(nlp,tweet_text):
-    return nlp(tweet_text).vector
+    return list(nlp(tweet_text).vector)
 
 def add_user_tweepy(username):
     '''Add a user and their tweets to database'''

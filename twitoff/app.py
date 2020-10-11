@@ -1,7 +1,6 @@
 from flask import Flask,render_template, request
 from .db_model import DB,User,Tweet
-
-
+from .predict import predict_user
 def create_app():
     """Create and condigure an instance of our flask applicaton"""
     app = Flask(__name__)
@@ -30,14 +29,24 @@ def create_app():
             tweets= []
         return render_template("user.html", title=name, message=message)
 
-    return app
-       
+   
+@app.route('/compare', methods=['POST'])
+def compare(message=""):
+    user1=request.values["user1"]
+    useer2=request.values['user2']
+    tweet_text=request.values['tweet_text']
 
-# Flask enviroment: export FLASK_APP=twitoff:APP and then flask run
-#flask shell
+    if user1== user2:
+        message= "can not compare a user to themselves."
+    else:
+        prediction=predict_user(user1,user2,tweet_text)
 
-#from twitoff.db_model import DB, User, Tweet
-#DB
-#DB.create_all()
-# or add DB.drop_all()
+        message= f'''{tweet_test} is more likely to be said by {user1 if prediction else user2}
+                      than {user2 if prediction else user1}'''
 
+    return render_template("predict.html",title="prediction",message=message)
+
+ return app
+
+#export FLASK_APP=twitoff:APP
+#export FLASK_ENV=development
